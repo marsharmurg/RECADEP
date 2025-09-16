@@ -1,0 +1,25 @@
+# Maven / Gradle build artifacts
+/target/
+/build/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.classpath
+*.project
+.settings/
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+application.properties
+application.yml

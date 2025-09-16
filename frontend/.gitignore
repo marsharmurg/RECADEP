@@ -1,0 +1,27 @@
+# Angular build artifacts
+/dist/
+/browser/
+/server/
+/angular.json
+
+# Node modules
+/node_modules/
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+# IDEs
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Angular CLI cache
+.angular/
+
+# Environment files
+.env
+.env.local

@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/frontend/server",
+    "target": "ES2022",
+    "module": "ES2022",
+    "types": ["node"],
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "files": ["src/main.server.ts", "server.ts"],
+  "angularCompilerOptions": {
+    "enableIvy": true
+  }
+}
+
+ 
