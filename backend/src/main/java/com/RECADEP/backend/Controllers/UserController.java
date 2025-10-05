@@ -1,4 +1,4 @@
-package com.RECADEP.backend;
+package com.RECADEP.backend.Controllers;
 
 import java.util.List;
 
