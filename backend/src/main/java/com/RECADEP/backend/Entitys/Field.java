@@ -26,12 +26,10 @@ public class Field {
 
     @Column(name = "area")
     private Double area;    
-
-    @ManyToOne
+    
     @OneToMany(mappedBy = "field", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Rent> rents;
-
-    @ManyToOne
+    
     @OneToMany(mappedBy = "field", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Reservation> reservations;
 
