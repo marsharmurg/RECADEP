@@ -1,1 +1,30 @@
-<app-user-list></app-user-list>
+<!--<app-user-list></app-user-list>
+<router-outlet></router-outlet>-->
+<header class="main-header">
+  <h1>RECADEP</h1>
+  <nav>
+    <!--div class="spacer">
+      <button *ngIf="!(auth.isAuthenticated$ | async)" (click)="auth.loginWithRedirect()">Iniciar sesión</button>
+      <button *ngIf="auth.isAuthenticated$ | async" (click)="auth.logout()">Cerrar sesión</button>
+    </!--div-->
+    <ng-container *ngIf="auth.isLoading$ | async; else ready">
+      <p>Cargando sesión...</p>
+    </ng-container>
+
+    <ng-template #ready>
+      <button *ngIf="!(auth.isAuthenticated$ | async)" (click)="auth.loginWithRedirect()">Iniciar sesión</button>
+      <button *ngIf="auth.isAuthenticated$ | async" (click)="logout()">Cerrar sesión</button>
+    </ng-template>
+
+    <a routerLink="/home" routerLinkActive="active">Inicio</a>
+    <a routerLink="/collision" routerLinkActive="active">Disponibilidad</a>
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="main-footer">
+  <p>© 2025 RECADEP</p>
+</footer>

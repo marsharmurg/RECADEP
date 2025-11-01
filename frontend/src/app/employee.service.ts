@@ -3,7 +3,11 @@ import { isPlatformServer  } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Employeer } from "./models/employee.model";
+<<<<<<< HEAD
 
+=======
+import { environment } from "./enviroment";
+>>>>>>> 7cd2d7e (FEAT: Desarrollo de componentes UI para validación de colisiones)
 @Injectable({
   providedIn: "root"
 })
@@ -12,11 +16,36 @@ export class EmployeerService {
 
   private apiUrl: string;
 
+<<<<<<< HEAD
   constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
     this.apiUrl = isPlatformServer(this.platformId)
     ? 'http://spring-backend:8080/api/employee'
     : 'http://localhost:8080/api/employee';
   }
+=======
+  /*constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
+    this.apiUrl = isPlatformServer(this.platformId)
+    ? 'http://spring-backend:8080/api/employee'
+    : 'http://localhost:8080/api/employee';
+  }*/
+  constructor(
+        private http: HttpClient,
+        @Inject(PLATFORM_ID) private platformId: Object
+      ) {
+        if (isPlatformServer(this.platformId)) {
+          // Angular ejecutándose en SSR (Node.js)
+          this.apiUrl = environment.springDocker + '/employee';
+        } else {
+          // Angular ejecutándose en navegador
+          // Detectar si está en Docker usando hostname o heurística
+          const isDocker = window.location.hostname !== 'localhost';
+
+          this.apiUrl = isDocker
+            ? environment.springHostBridge + '/employee'
+            : environment.springLocal + '/employee';
+        }
+      }
+>>>>>>> 7cd2d7e (FEAT: Desarrollo de componentes UI para validación de colisiones)
 
   getAll(): Observable<Employeer[]> {
     return this.http.get<Employeer[]>(this.apiUrl);
