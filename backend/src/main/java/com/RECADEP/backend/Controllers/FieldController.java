@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.RECADEP.backend.Entitys.Field;
@@ -49,5 +50,10 @@ public class FieldController {
     @DeleteMapping("/{id}")
     public void deleteField(@PathVariable Long id) {
         fieldRepository.deleteById(id);
+    }
+
+    @GetMapping("/by-type")
+    public List<Field> getFieldsByType(@RequestParam String type) {
+        return fieldRepository.findByFieldType(type);
     }
 }

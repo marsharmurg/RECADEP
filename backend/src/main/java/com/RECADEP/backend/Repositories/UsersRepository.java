@@ -8,4 +8,5 @@ import com.RECADEP.backend.Entitys.Users;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Long>{
 
+    Users findByEmail(String email);
 }
