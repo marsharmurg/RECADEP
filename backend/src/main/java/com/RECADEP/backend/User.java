@@ -1,4 +1,4 @@
-package com.RECADEP.backend.Entitys;
+package com.RECADEP.backend;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
