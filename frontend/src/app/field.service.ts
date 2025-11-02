@@ -4,11 +4,7 @@ import { isPlatformServer  } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Field } from "./models/field.model";
-<<<<<<< HEAD
-
-=======
 import { environment } from "./enviroment";
->>>>>>> 7cd2d7e (FEAT: Desarrollo de componentes UI para validación de colisiones)
 @Injectable({
   providedIn: "root"
 })
@@ -17,13 +13,6 @@ export class FieldService {
 
   private apiUrl: string;
 
-<<<<<<< HEAD
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
-    this.apiUrl = isPlatformServer(this.platformId)
-    ? 'http://spring-backend:8080/api/field'
-    : 'http://localhost:8080/api/field';
-  }
-=======
   /*constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
     this.apiUrl = isPlatformServer(this.platformId)
     ? 'http://spring-backend:8080/api/field'
@@ -46,7 +35,6 @@ export class FieldService {
             : environment.springLocal + '/field';
         }
       }
->>>>>>> 7cd2d7e (FEAT: Desarrollo de componentes UI para validación de colisiones)
 
   getAll(): Observable<Field[]> {
     return this.http.get<Field[]>(this.apiUrl);
@@ -67,11 +55,8 @@ export class FieldService {
   delete(id: number): Observable<void>{
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-<<<<<<< HEAD
-=======
 
   getFieldsByType(fieldType: string): Observable<Field[]> {
     return this.http.get<Field[]>(`${this.apiUrl}/by-type?type=${fieldType}`);
   }
->>>>>>> 7cd2d7e (FEAT: Desarrollo de componentes UI para validación de colisiones)
 }

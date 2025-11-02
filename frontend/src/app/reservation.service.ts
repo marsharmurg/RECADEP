@@ -1,24 +1,3 @@
-<<<<<<< HEAD
-
-import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { isPlatformServer  } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { Reservation } from "./models/reservation.model";
-
-@Injectable({
-  providedIn: "root"
-})
-
-export class ReservationService {
-
-  private apiUrl: string;
-
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
-    this.apiUrl = isPlatformServer(this.platformId)
-    ? 'http://spring-backend:8080/api/field'
-    : 'http://localhost:8080/api/field';
-=======
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -47,7 +26,6 @@ export class ReservationService {
         ? environment.springHostBridge + '/reservation'
         : environment.springLocal + '/reservation';
     }
->>>>>>> 7cd2d7e (FEAT: Desarrollo de componentes UI para validación de colisiones)
   }
 
   getAll(): Observable<Reservation[]> {
@@ -66,11 +44,6 @@ export class ReservationService {
     return this.http.put<Reservation>(`${this.apiUrl}/${id}`, reservation);
   }
 
-<<<<<<< HEAD
-  delete(id: number): Observable<void>{
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
-=======
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
@@ -94,5 +67,4 @@ export class ReservationService {
       },
     });
   }
->>>>>>> 7cd2d7e (FEAT: Desarrollo de componentes UI para validación de colisiones)
 }
