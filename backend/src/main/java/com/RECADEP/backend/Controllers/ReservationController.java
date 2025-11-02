@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.RECADEP.backend.Entitys.Field;
 import com.RECADEP.backend.Entitys.Reservation;
+import com.RECADEP.backend.Repositories.FieldRepository;
 import com.RECADEP.backend.Repositories.ReservationRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/reservation")
@@ -22,6 +26,8 @@ import com.RECADEP.backend.Repositories.ReservationRepository;
 public class ReservationController {
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private FieldRepository fieldRepository;
 
     @GetMapping
     public List<Reservation> getAllReservations() {
@@ -30,8 +36,18 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public Reservation getReservation(@PathVariable Long id) {
-        return reservationRepository.findById(id).orElse(null);
+        return reservationRepository.findById(id).orElse(null); 
     }
+
+    @GetMapping("/collision")
+    public boolean existsCollision(@RequestParam Long field_id, @RequestParam String reservationDate, 
+    @RequestParam String startTime, @RequestParam String endTime) {
+        
+        Field field = fieldRepository.findById(field_id).orElse(null);
+        if(field == null) return false;
+        
+        return reservationRepository.existsCollision(field, reservationDate, startTime, endTime);
+    }    
 
     @PostMapping
     public Reservation createReservation(@RequestBody Reservation reservation) {
