@@ -31,7 +31,7 @@ public class Reservation {
     private String endTime;
 
     @Column(name = "status")
-    private Boolean status;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
@@ -83,13 +83,13 @@ public class Reservation {
         this.endTime = endTime;
     }
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
-    }
+    }  
 
     public Customer getCustomer() {
         return customer;
@@ -187,5 +187,5 @@ public class Reservation {
         return "Reservation [reservationId=" + reservationId + ", reservationDate=" + reservationDate + ", startTime="
                 + startTime + ", endTime=" + endTime + ", status=" + status + ", customer=" + customer + ", field="
                 + field + ", rent=" + rent + "]";
-    }    
+    }       
 }

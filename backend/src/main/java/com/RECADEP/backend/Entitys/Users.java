@@ -29,6 +29,12 @@ public class Users {
     @Column(name = "document_number")
     private Short documentNumber;    
 
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+    @Column(name = "telephone")
+    private Short telephone;
+
     @OneToOne(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private Employee employees;
 
@@ -96,6 +102,22 @@ public class Users {
 
     public void setCustomers(Customer customers) {
         this.customers = customers;
+    }    
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Short getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(Short telephone) {
+        this.telephone = telephone;
     }
 
     @Override
@@ -107,6 +129,8 @@ public class Users {
         result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
         result = prime * result + ((birthdate == null) ? 0 : birthdate.hashCode());
         result = prime * result + ((documentNumber == null) ? 0 : documentNumber.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((telephone == null) ? 0 : telephone.hashCode());
         result = prime * result + ((employees == null) ? 0 : employees.hashCode());
         result = prime * result + ((customers == null) ? 0 : customers.hashCode());
         return result;
@@ -146,6 +170,16 @@ public class Users {
                 return false;
         } else if (!documentNumber.equals(other.documentNumber))
             return false;
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
+            return false;
+        if (telephone == null) {
+            if (other.telephone != null)
+                return false;
+        } else if (!telephone.equals(other.telephone))
+            return false;
         if (employees == null) {
             if (other.employees != null)
                 return false;
@@ -162,7 +196,8 @@ public class Users {
     @Override
     public String toString() {
         return "Users [usersId=" + usersId + ", username=" + username + ", lastname=" + lastname + ", birthdate="
-                + birthdate + ", documentNumber=" + documentNumber + ", employees=" + employees + ", customers="
-                + customers + "]";
-    }        
+                + birthdate + ", documentNumber=" + documentNumber + ", email=" + email + ", telephone=" + telephone
+                + ", employees=" + employees + ", customers=" + customers + "]";
+    }
+    
 }
