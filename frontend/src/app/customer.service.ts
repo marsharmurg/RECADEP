@@ -54,4 +54,8 @@ export class CustomerService {
   delete(id: number): Observable<void>{
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+   getCustomerByEmail(email: string): Observable<Customer> {
+    return this.http.get<Customer>(`${this.apiUrl}/by-email?email=${email}`);
+  }
 }

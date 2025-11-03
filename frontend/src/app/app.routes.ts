@@ -13,6 +13,11 @@ export const routes: Routes = [
   canActivate: [AuthGuard]
   },
   {
+    path: 'reserva-usuario',
+    loadComponent: () => import('./reserva-usuario/reserva-usuario.component').then(m => m.ReservaUsuarioComponent),
+    canActivate: [AuthGuard] // si estás usando protección con Auth0
+  },
+  {
     path: 'home',
     loadComponent: () =>
       import('./home-page/home-page.component').then(m => m.HomePageComponent)

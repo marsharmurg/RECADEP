@@ -1,5 +1,10 @@
 package com.RECADEP.backend.Entitys;
 
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,12 +29,15 @@ public class Customer {
 
     @OneToOne
     @JoinColumn(name = "users_id", unique = true, nullable = false)
+    @JsonIgnoreProperties({"customers", "employees"})
     private Users users;
 
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnore
     private java.util.List<Reservation> reservations;
 
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnore
     private java.util.List<Rent> rents;
 
     public Customer() {

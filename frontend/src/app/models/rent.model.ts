@@ -4,7 +4,7 @@ import { Reservation } from "./reservation.model";
 import { Field } from "./field.model";
 
 export interface Rent {
-  rentId: bigint;
+  rentId: number;
   rentDate: string;
   startTime: string;
   endTime: string;

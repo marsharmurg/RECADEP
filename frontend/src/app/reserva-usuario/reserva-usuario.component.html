@@ -1,0 +1,19 @@
+<section class="reserva-usuario">
+  <h2>Confirmar Reserva</h2>
+
+  <!-- Formulario que maneja selección y verificación -->
+  <app-reserva-validacion-form
+    [initialValues]="initialValues"
+    (onDisponibilidad)="onDisponibilidad($event)"
+    (onDatosReserva)="onDatosReserva($event)"
+  ></app-reserva-validacion-form>
+
+  <!-- Botón de confirmación solo si está disponible -->
+  <button
+  *ngIf="disponibilidad === true"
+  (click)="abrirModalConfirmacion()"
+  class="btn btn-success">
+  Confirmar Reserva
+  </button>
+</section>
+

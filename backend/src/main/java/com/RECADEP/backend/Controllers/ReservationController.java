@@ -51,6 +51,7 @@ public class ReservationController {
 
     @PostMapping
     public Reservation createReservation(@RequestBody Reservation reservation) {
+        System.out.println("Recibido: " + reservation.getCustomer()); 
         return reservationRepository.save(reservation);
     }
 

@@ -2,6 +2,8 @@ package com.RECADEP.backend.Entitys;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +37,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonIgnoreProperties({"reservations", "rents"})
     private Customer customer;
 
     @ManyToOne
@@ -42,6 +45,7 @@ public class Reservation {
     private Field field;
 
     @OneToOne(mappedBy = "reservation", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnoreProperties({"reservations", "rents"})
     private Rent rent;
 
     public Reservation() {
