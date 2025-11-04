@@ -1,89 +1,82 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ReservationService } from '../reservation.service';
-import { FieldService } from '../field.service';
+import { AuthService } from '@auth0/auth0-angular';
+import { MatDialog } from '@angular/material/dialog';
+import { ReservaPreviewDialogComponent } from '../dialogs/reserva-preview-dialog/reserva-preview-dialog.component';
+import { ReservaValidacionFormComponent } from '../shared/reserva-validacion-form/reserva-validacion-form.component';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReservaValidacionFormComponent],
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.css']
+  styleUrls: ['./home-page.component.css'],
 })
 export class HomePageComponent {
-  fieldType = '';
-  fieldList: any[] = [];
-  selectedFieldId = '';
-  fecha = '';
-  horaInicio = '';
-  horaFin = '';
-  horaFinDisabled = true;
   disponibilidad: boolean | null = null;
+  datosReserva: {
+    canchaId: number;
+    reservationDate: string;
+    startTime: string;
+    endTime: string;
+  } | null = null;
 
   constructor(
-    private fieldService: FieldService,
-    private reservationService: ReservationService,
-    private router: Router
+    private router: Router,
+    private auth: AuthService,
+    private dialog: MatDialog
   ) {}
 
-  onFieldTypeChange() {
-    this.selectedFieldId = '';
-    this.fieldList = [];
-    this.fecha = '';
-    this.horaInicio = '';
-    this.horaFin = '';
-    this.horaFinDisabled = true;
-    this.disponibilidad = null;
-
-    if (this.fieldType) {
-      this.fieldService.getFieldsByType(this.fieldType).subscribe(fields => {
-        this.fieldList = fields;
-      });
-    }
+  onDisponibilidad(disponible: boolean | null) {
+    this.disponibilidad = disponible;
   }
 
-  onHoraInicioChange() {
-    this.horaFinDisabled = false;
-    this.horaFin = '';
+  onDatosReserva(datos: {
+    canchaId: number;
+    reservationDate: string;
+    startTime: string;
+    endTime: string;
+  }) {
+    this.datosReserva = datos;
   }
 
-  validarHoras(): boolean {
-    if (!this.horaInicio || !this.horaFin) return false;
+  iniciarReserva(): void {
+    if (!this.datosReserva) return;
 
-    const inicio = this.parseHora(this.horaInicio);
-    const fin = this.parseHora(this.horaFin);
-    const duracion = (fin.getTime() - inicio.getTime()) / (1000 * 60); // minutos
+    const { canchaId, reservationDate, startTime, endTime } = this.datosReserva;
 
-    return (
-      fin >= inicio &&
-      duracion >= 30 &&
-      duracion <= 120 &&
-      fin <= this.parseHora('21:30')
-    );
-  }
+    this.auth.isAuthenticated$.subscribe((isAuth) => {
+      if (!isAuth) {
+        this.auth.loginWithRedirect({
+          appState: {
+            target: '/reserva-usuario',
+            canchaId,
+            fechaInicio: `${reservationDate}T${startTime}`,
+            fechaFin: `${reservationDate}T${endTime}`,
+          },
+        });
+      } else {
+        const dialogRef = this.dialog.open(ReservaPreviewDialogComponent, {
+          data: {
+            canchaId,
+            fechaInicio: `${reservationDate}T${startTime}`,
+            fechaFin: `${reservationDate}T${endTime}`,
+          },
+        });
 
-  parseHora(horaStr: string): Date {
-    const [h, m] = horaStr.split(':').map(Number);
-    const d = new Date();
-    d.setHours(h, m, 0, 0);
-    return d;
-  }
-
-  consultarDisponibilidad() {
-    if (!this.selectedFieldId || !this.fecha || !this.horaInicio || !this.horaFin || !this.validarHoras()) {
-      this.disponibilidad = null;
-      return;
-    }
-
-    this.reservationService.checkCollision(
-      Number(this.selectedFieldId),
-      this.fecha,
-      this.horaInicio,
-      this.horaFin
-    ).subscribe((hayColision: boolean) => {
-      this.disponibilidad = !hayColision;
+        dialogRef.afterClosed().subscribe((confirmado) => {
+          if (confirmado) {
+            this.router.navigate(['/reserva-usuario'], {
+              queryParams: {
+                canchaId,
+                fechaInicio: `${reservationDate}T${startTime}`,
+                fechaFin: `${reservationDate}T${endTime}`,
+              },
+            });
+          }
+        });
+      }
     });
   }
 }

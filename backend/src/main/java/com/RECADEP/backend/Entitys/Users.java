@@ -1,5 +1,7 @@
 package com.RECADEP.backend.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,9 +38,11 @@ public class Users {
     private Short telephone;
 
     @OneToOne(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnore
     private Employee employees;
 
     @OneToOne(mappedBy = "users", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnore
     private Customer customers;
 
     public Users() {

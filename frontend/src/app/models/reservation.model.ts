@@ -3,12 +3,12 @@ import { Customer } from "./customer.model";
 import { Rent } from "./rent.model";
 
 export interface Reservation {
-  reservationId: bigint;
+  reservationId?: number;
   reservationDate: string;
   startTime: string;
   endTime: string;
-  status: boolean;
+  status: string;
   field: Field;
   customer: Customer;
-  rents: Rent;
+  rents?: Rent;
 }

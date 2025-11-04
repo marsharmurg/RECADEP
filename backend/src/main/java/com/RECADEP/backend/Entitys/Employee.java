@@ -2,6 +2,9 @@ package com.RECADEP.backend.Entitys;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,9 +32,11 @@ public class Employee {
 
     @OneToOne
     @JoinColumn(name = "users_id", unique = true, nullable = false)
+    @JsonIgnoreProperties({"employee", "customer"})
     private Users users;
 
     @OneToMany(mappedBy = "employee", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnore
     private List<Rent> rents;
 
     public Employee() {

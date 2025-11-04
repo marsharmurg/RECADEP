@@ -2,7 +2,7 @@ import {Customer} from './customer.model';
 import { Employeer } from './employee.model';
 
 export interface Users {
-  usersId: bigint;
+  usersId: number;
   username: string;
   lastname: string;
   bithdate: string;

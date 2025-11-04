@@ -3,6 +3,8 @@ package com.RECADEP.backend.Entitys;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,9 +30,11 @@ public class Field {
     private Double area;    
     
     @OneToMany(mappedBy = "field", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnore
     private List<Rent> rents;
     
     @OneToMany(mappedBy = "field", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @JsonIgnore
     private List<Reservation> reservations;
 
     public Field() {

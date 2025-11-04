@@ -59,4 +59,8 @@ export class UsersService {
   sincronizarUsuario(): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/sync`, {});
   }
+
+  getUserByEmail(email: string): Observable<Users> {
+    return this.http.get<Users>(`${this.apiUrl}/by-email?email=${email}`);
+  }
 }

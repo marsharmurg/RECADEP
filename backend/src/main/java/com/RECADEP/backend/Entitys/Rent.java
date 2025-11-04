@@ -1,5 +1,7 @@
 package com.RECADEP.backend.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,18 +34,22 @@ public class Rent {
     
     @OneToOne
     @JoinColumn(name = "reservation_id", nullable = true, unique = true)
+    @JsonIgnoreProperties({"rent", "customer"})
     private Reservation reservation;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = true)
+    @JsonIgnoreProperties({"rents", "users"})
     private Employee employee;    
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonIgnoreProperties({"rents", "reservations"})
     private Customer customer;
     
     @ManyToOne
     @JoinColumn(name = "field_id", nullable = false)
+    @JsonIgnoreProperties({"reservations", "rents"})
     private Field field;
 
     public Rent() {
