@@ -21,5 +21,12 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./home-page/home-page.component').then(m => m.HomePageComponent)
+  },
+  {
+    path: 'admin-reservas',
+    loadComponent: () =>
+      import('./admin-reservas-list/admin-reservas-list.component').then(m => m.AdminReservasListComponent),
+    canActivate: [AuthGuard] // Protección con Auth0
   }
+
 ];
