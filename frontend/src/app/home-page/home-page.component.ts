@@ -15,6 +15,8 @@ import { ReservaValidacionFormComponent } from '../shared/reserva-validacion-for
 })
 export class HomePageComponent {
   disponibilidad: boolean | null = null;
+  isAuthenticated = false;
+  isAdmin = false;
   datosReserva: {
     canchaId: number;
     reservationDate: string;
@@ -40,23 +42,44 @@ export class HomePageComponent {
   }) {
     this.datosReserva = datos;
   }
+  ngOnInit(): void {
+    this.auth.user$.subscribe((user) => {
+      const roles = user?.['https://your-app.com/roles'] || [];
+      this.isAdmin = roles.includes('admin');
+    });
+
+    this.auth.isAuthenticated$.subscribe((auth) => {
+      this.isAuthenticated = auth;
+    });
+  }
 
   iniciarReserva(): void {
     if (!this.datosReserva) return;
 
     const { canchaId, reservationDate, startTime, endTime } = this.datosReserva;
 
-    this.auth.isAuthenticated$.subscribe((isAuth) => {
-      if (!isAuth) {
-        this.auth.loginWithRedirect({
-          appState: {
-            target: '/reserva-usuario',
-            canchaId,
-            fechaInicio: `${reservationDate}T${startTime}`,
-            fechaFin: `${reservationDate}T${endTime}`,
-          },
-        });
-      } else {
+    this.auth.user$.subscribe((user) => {
+      const roles = user?.['https://your-app.com/roles'] || [];
+      const isAdmin = roles.includes('admin');
+
+      this.auth.isAuthenticated$.subscribe((isAuth) => {
+        if (!isAuth) {
+          this.auth.loginWithRedirect({
+            appState: {
+              target: isAdmin ? '/admin-reservas' : '/reserva-usuario',
+              canchaId,
+              fechaInicio: `${reservationDate}T${startTime}`,
+              fechaFin: `${reservationDate}T${endTime}`,
+            },
+          });
+          return;
+        }
+
+        if (isAdmin) {
+          this.router.navigate(['/admin-reservas']);
+          return;
+        }
+
         const dialogRef = this.dialog.open(ReservaPreviewDialogComponent, {
           data: {
             canchaId,
@@ -76,7 +99,7 @@ export class HomePageComponent {
             });
           }
         });
-      }
+      });
     });
   }
 }
