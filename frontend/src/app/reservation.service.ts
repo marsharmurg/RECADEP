@@ -1,5 +1,5 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformServer } from '@angular/common';
+import { isPlatformBrowser,isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Reservation } from './models/reservation.model';
@@ -16,18 +16,25 @@ export class ReservationService {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    let baseUrl: string;
+
+    // 1. Lado del Servidor (SSR/Node.js)
     if (isPlatformServer(this.platformId)) {
-      // Angular ejecutándose en SSR (Node.js)
-      this.apiUrl = environment.springDocker + '/reservation';
-    } else {
-      // Angular ejecutándose en navegador
-      // Detectar si está en Docker usando hostname o heurística
+      baseUrl = environment.springDocker;
+
+      // 2. Lado del Cliente (Navegador)
+      // ESTO AHORA FUNCIONA porque isPlatformBrowser está importado
+    } else if (isPlatformBrowser(this.platformId)) {
       const isDocker = window.location.hostname !== 'localhost';
 
-      this.apiUrl = isDocker
-        ? environment.springHostBridge + '/reservation'
-        : environment.springLocal + '/reservation';
+      baseUrl = isDocker
+        ? environment.springHostBridge
+        : environment.springLocal;
+    } else {
+      baseUrl = environment.springLocal;
     }
+
+    this.apiUrl = baseUrl + '/reservation';
   }
 
   getAll(): Observable<Reservation[]> {
