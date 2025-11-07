@@ -16,29 +16,32 @@ export class ReservationService {
     : 'http://localhost:8080/api/field';
   }*/
   constructor(
-    private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    let baseUrl: string;
+  private http: HttpClient,
+  @Inject(PLATFORM_ID) private platformId: Object
+) {
+  let baseUrl: string;
 
-    // 1. Lado del Servidor (SSR/Node.js)
-    if (isPlatformServer(this.platformId)) {
-      baseUrl = environment.springDocker;
+  // 1. Si estamos en el Servidor (SSR/Node.js)
+  if (isPlatformServer(this.platformId)) {
+    baseUrl = environment.springDocker;
 
-      // 2. Lado del Cliente (Navegador)
-      // ESTO AHORA FUNCIONA porque isPlatformBrowser está importado
-    } else if (isPlatformBrowser(this.platformId)) {
-      const isDocker = window.location.hostname !== 'localhost';
+  // 2. Si NO estamos en el servidor, usamos una verificación SEGURA.
+  // Solo accedemos a window si typeof window es 'object' (es decir, existe)
+  } else if (typeof window !== 'undefined') {
 
-      baseUrl = isDocker
-        ? environment.springHostBridge
-        : environment.springLocal;
-    } else {
-      baseUrl = environment.springLocal;
-    }
+    // Si estamos aquí, sabemos que estamos en el navegador.
+    const isDocker = window.location.hostname !== 'localhost';
 
-    this.apiUrl = baseUrl + '/rent';
+    baseUrl = isDocker
+      ? environment.springHostBridge
+      : environment.springLocal;
+  } else {
+    // Si no es SSR ni el navegador (ej. pruebas unitarias), usamos local
+    baseUrl = environment.springLocal;
   }
+
+  this.apiUrl = baseUrl + '/rent'; // O '/field' si es el FieldService
+}
 
   getAll(): Observable<Rent[]> {
     return this.http.get<Rent[]>(this.apiUrl);

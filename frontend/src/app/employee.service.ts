@@ -21,23 +21,25 @@ export class EmployeerService {
   ) {
     let baseUrl: string;
 
-    // 1. Lado del Servidor (SSR/Node.js)
+    // 1. Si estamos en el Servidor (SSR/Node.js)
     if (isPlatformServer(this.platformId)) {
       baseUrl = environment.springDocker;
 
-      // 2. Lado del Cliente (Navegador)
-      // ESTO AHORA FUNCIONA porque isPlatformBrowser está importado
-    } else if (isPlatformBrowser(this.platformId)) {
+      // 2. Si NO estamos en el servidor, usamos una verificación SEGURA.
+      // Solo accedemos a window si typeof window es 'object' (es decir, existe)
+    } else if (typeof window !== 'undefined') {
+      // Si estamos aquí, sabemos que estamos en el navegador.
       const isDocker = window.location.hostname !== 'localhost';
 
       baseUrl = isDocker
         ? environment.springHostBridge
         : environment.springLocal;
     } else {
+      // Si no es SSR ni el navegador (ej. pruebas unitarias), usamos local
       baseUrl = environment.springLocal;
     }
 
-    this.apiUrl = baseUrl + '/employee';
+    this.apiUrl = baseUrl + '/employee'; // O '/field' si es el FieldService
   }
 
   getAll(): Observable<Employeer[]> {
