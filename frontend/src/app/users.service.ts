@@ -1,15 +1,13 @@
-import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { isPlatformServer  } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { Users } from "./models/users.model";
-import { environment } from "./enviroment";
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Users } from './models/users.model';
+import { environment } from './enviroment';
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
-
 export class UsersService {
-
   private apiUrl: string;
 
   /*constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
@@ -18,22 +16,29 @@ export class UsersService {
     : 'http://localhost:8080/api/users';
   }*/
   constructor(
-      private http: HttpClient,
-      @Inject(PLATFORM_ID) private platformId: Object
-    ) {
-      if (isPlatformServer(this.platformId)) {
-        // Angular ejecutándose en SSR (Node.js)
-        this.apiUrl = environment.springDocker + '/user';
-      } else {
-        // Angular ejecutándose en navegador
-        // Detectar si está en Docker usando hostname o heurística
-        const isDocker = window.location.hostname !== 'localhost';
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    let baseUrl: string;
 
-        this.apiUrl = isDocker
-          ? environment.springHostBridge + '/user'
-          : environment.springLocal + '/user';
-      }
+    // 1. Lado del Servidor (SSR/Node.js)
+    if (isPlatformServer(this.platformId)) {
+      baseUrl = environment.springDocker;
+
+      // 2. Lado del Cliente (Navegador)
+      // ESTO AHORA FUNCIONA porque isPlatformBrowser está importado
+    } else if (isPlatformBrowser(this.platformId)) {
+      const isDocker = window.location.hostname !== 'localhost';
+
+      baseUrl = isDocker
+        ? environment.springHostBridge
+        : environment.springLocal;
+    } else {
+      baseUrl = environment.springLocal;
     }
+
+    this.apiUrl = baseUrl + '/users';
+  }
 
   getAll(): Observable<Users[]> {
     return this.http.get<Users[]>(this.apiUrl);
@@ -51,7 +56,7 @@ export class UsersService {
     return this.http.put<Users>(`${this.apiUrl}/${id}`, users);
   }
 
-  delete(id: number): Observable<void>{
+  delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
